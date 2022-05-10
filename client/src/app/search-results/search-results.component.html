@@ -1,0 +1,26 @@
+<div class="container" infinite-scroll [infiniteScrollDistance]="scrollDistance" [infiniteScrollThrottle]="throttle"
+    (scrolled)="loadMore()">
+    <div class="row">
+        <div class="col-sm-12">
+            <ul class="list-group list-group-flush">
+                <ng-container></ng-container>
+                <li class="list-group-item ps-0" [ngClass]="{
+                    'bg-light': i === selectedResult
+                }" *ngFor="let searchResult of searchResults; let i = index;" (click)="onClick($event, i)">
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <img [src]="searchResult.snippet.thumbnails.medium.url" class="w-100">
+                        </div>
+                        <div class="col-sm-8">
+                            <h5 class="mt-2" [innerHTML]="searchResult.snippet.title"></h5>
+                            <h6>{{ searchResult.snippet.channelTitle }}<i class="bi bi-dot"></i>{{
+                                searchResult.snippet.publishTime.split("T")[0] }}
+                            </h6>
+                            <p>{{ searchResult.snippet.description }}</p>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>

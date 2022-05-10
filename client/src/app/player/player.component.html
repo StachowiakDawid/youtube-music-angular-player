@@ -1,0 +1,32 @@
+<div class="container fixed-bottom d-none" [ngClass]="{
+    'd-none': !showPlayerContainer
+}">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between">
+                    <span [innerHtml]="audioName"></span>
+                    <i class="bi bi-x-square-fill ml-auto" (click)="closePlayer()"></i>
+                </div>
+                <div class="card-body">
+                    <audio (canplay)="onCanPlay()" (playing)="whilePlaying()" (ended)="audioIsNotPlaying()"
+                        (pause)="audioIsNotPlaying()" #audioElement></audio>
+                    <div class="align-items-center justify-content-between" [ngClass]="[
+                            audioIsLoading ? 'd-none' : 'd-flex'
+                        ]">
+                        <i class="bi me-2" (click)="togglePlay()" [ngClass]="[
+                                audioIsPlaying ? 'bi-pause-fill' : 'bi-play-fill'
+                            ]"></i>
+                        <div style="flex: 1; background-color: lightgray;" (click)="controlProgress($event)">
+                            <div style="width: 0px; height: 24px; background: #006B5A; transition: width .1s linear;"
+                                [style.width]="progressBarWidth+'%'">
+                            </div>
+                        </div>
+                        <div class="ms-2">{{ audioProgress }} / {{ audioDuration }} </div>
+                    </div>
+                    <span *ngIf="audioIsLoading">Ładowanie...</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
