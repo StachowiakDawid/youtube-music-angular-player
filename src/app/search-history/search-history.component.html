@@ -1,0 +1,10 @@
+<div class="container">
+    <ul class="list-group list-group-flush">
+        <ng-container *ngFor="let historyItem of searchHistory; let i = index;">
+            <li class="list-group-item d-flex justify-content-between">
+                <span routerLink="/search/{{historyItem}}" class="w-100">{{ historyItem }}</span>
+                <i class="bi bi-x-square-fill ml-auto h-100" (click)="deleteItem(i)"></i>
+            </li>
+        </ng-container>
+    </ul>
+</div>

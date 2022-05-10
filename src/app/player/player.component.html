@@ -1,0 +1,25 @@
+<div class="container fixed-bottom d-none" #playerContainer>
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between">
+                    <span [innerHtml]="audioName"></span>
+                    <i class="bi bi-x-square-fill ml-auto" (click)="closePlayer($event)"></i>
+                </div>
+                <div class="card-body">
+                    <audio (canplay)="onCanPlay($event)" (playing)="whilePlaying($event)" (ended)="onEnded($event)"
+                        #audioElement></audio>
+                    <div class="d-flex align-items-center justify-content-between">
+                        <i class="bi bi-play-fill me-2" (click)="togglePlay()" #playButton></i>
+                        <div style="flex: 1; background-color: lightgray;" (click)="controlProgress($event)">
+                            <div style="width: 0px; height: 24px; background: #006B5A; transition: width .1s linear;"
+                                #playerProgressBar>
+                            </div>
+                        </div>
+                        <div class="ms-2">{{ audioProgress }} / {{ audioDuration }} </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
