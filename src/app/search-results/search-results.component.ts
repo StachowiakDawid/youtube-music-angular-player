@@ -1,6 +1,7 @@
 import { Component, OnChanges, OnInit } from '@angular/core';
 import { ActivatedRoute, Router, Params, Data } from '@angular/router';
 import { combineLatest } from 'rxjs';
+import { AudioUrlService } from '../audio-url.service';
 import { PlayerService } from '../player.service';
 import { SearchService } from '../search.service';
 
@@ -19,12 +20,12 @@ export class SearchResultsComponent implements OnInit {
     private router: Router,
     private searchService: SearchService,
     private playerService: PlayerService,
-  ) { }
+    private audioUrlService: AudioUrlService
+  ) {}
 
   ngOnInit(): void {
     combineLatest(
-      [this.route.params,
-      this.route.data],
+      [this.route.params, this.route.data],
       (params: Params, data: Data) => ({
         params,
         data,
@@ -33,35 +34,53 @@ export class SearchResultsComponent implements OnInit {
       const { params, data } = res;
       this.phrase = params['phrase'];
       this.searchService.searchPhrase.next(params['phrase']);
-      this.searchService.getSearchResults(params['phrase']).subscribe((searchResults: any) => this.searchResults = searchResults.items);
+      this.searchService
+        .getSearchResults(params['phrase'])
+        .subscribe(
+          (searchResults: any) => (this.searchResults = searchResults.items)
+        );
     });
-    this.searchService.unSelectResult.subscribe(unSelect => {
+    this.searchService.unSelectResult.subscribe((unSelect) => {
       if (unSelect) {
-        this.selectedResult?.classList.remove("bg-light");
+        this.selectedResult?.classList.remove('bg-light');
         this.selectedResult = undefined;
       }
     });
   }
 
   loadMore(): void {
-    this.searchService.loadMoreSearchResults().subscribe((searchResults: any) => this.searchResults = this.searchResults.concat(searchResults.items));
+    this.searchService
+      .loadMoreSearchResults()
+      .subscribe(
+        (searchResults: any) =>
+          (this.searchResults = this.searchResults.concat(searchResults.items))
+      );
   }
 
   onScrollDown(): void {
     this.loadMore();
   }
-  
+
   onClick(event: MouseEvent, i: number): void {
-    let target = (event.currentTarget as Element);
-    if ((this.selectedResult && this.selectedResult !== target) || !this.selectedResult) {
+    let target = event.currentTarget as Element;
+    if (
+      (this.selectedResult && this.selectedResult !== target) ||
+      !this.selectedResult
+    ) {
       if (this.selectedResult) {
-        this.selectedResult.classList.remove("bg-light");
+        this.selectedResult.classList.remove('bg-light');
       }
       this.selectedResult = target;
-      this.selectedResult.classList.add("bg-light");
-      this.playerService.audioSrc.next(this.searchResults[i].id.videoId);
-      this.playerService.audioName.next(this.searchResults[i].snippet.title);
-      this.playerService.selected.next(true);
+      this.selectedResult.classList.add('bg-light');
+      this.audioUrlService
+        .loadAudioUrl(this.searchResults[i].id.videoId)
+        .subscribe((url) => {
+          this.playerService.audioSrc.next(this.searchResults[i].id.videoId);
+          this.playerService.audioName.next(
+            this.searchResults[i].snippet.title
+          );
+          this.playerService.selected.next(true);
+        });
     }
   }
 }
