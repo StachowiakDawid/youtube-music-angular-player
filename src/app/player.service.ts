@@ -7,6 +7,6 @@ import { Subject } from 'rxjs';
 export class PlayerService {
   audioName = new Subject<string>();
   selected = new Subject<boolean>();
-  audioSrc!: string;
+  audioSrc = new Subject<string>();
   constructor() { }
 }

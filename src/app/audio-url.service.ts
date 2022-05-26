@@ -1,14 +1,15 @@
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-
+import { Observable } from 'rxjs';
+import { BACKEND_URL } from 'src/constants';
 @Injectable({
   providedIn: 'root'
 })
 export class AudioUrlService {
-  private counter = 0;
-  constructor() { }
-  getAudioUrl(): string {
-    let songs = ["SoundHelix-Song-1.mp3", "Sample2.mp3"];
-    this.counter++;
-    return "assets/" + songs[this.counter%2];
+  private url: string = '';
+  constructor(private http: HttpClient) { }
+  getAudioUrl(id: string): Observable<string> {
+    let result = this.http.get(`${BACKEND_URL}?id=${id}`, {responseType: 'text'}).pipe();
+    return result;
   }
 }

@@ -47,7 +47,11 @@ export class PlayerComponent implements AfterViewInit {
     this.progressBar = this.progressBarRef.nativeElement;
     this.playButton = this.playButtonRef.nativeElement;
     this.playerContainer = this.playerContainerRef.nativeElement;
-    this.audioElement.src = this.audioUrlService.getAudioUrl();
+    this.playerService.audioSrc.subscribe(id => {
+      this.audioUrlService.getAudioUrl(id).subscribe((src: string) => {
+        this.audioElement.src = src;
+      })
+    })
     this.playerService.audioName.subscribe(name => this.audioName = name);
     this.playerService.selected.subscribe(selected => {
       if (selected) {
@@ -58,7 +62,11 @@ export class PlayerComponent implements AfterViewInit {
           this.togglePlayButton();
         }
         this.audioElement.pause();
-        this.audioElement.src = this.audioUrlService.getAudioUrl();
+        this.playerService.audioSrc.subscribe(id => {
+          this.audioUrlService.getAudioUrl(id).subscribe((src: string) => {
+            this.audioElement.src = src;
+          })
+        })
         this.audioDuration = this.convertTime(this.audioElement.duration);
         if (!wasPaused) {
           this.audioElement.play();

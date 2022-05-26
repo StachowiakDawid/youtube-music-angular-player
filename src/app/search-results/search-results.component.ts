@@ -59,7 +59,7 @@ export class SearchResultsComponent implements OnInit {
       }
       this.selectedResult = target;
       this.selectedResult.classList.add("bg-light");
-      this.playerService.audioSrc = this.searchResults[i].id.videoId;
+      this.playerService.audioSrc.next(this.searchResults[i].id.videoId);
       this.playerService.audioName.next(this.searchResults[i].snippet.title);
       this.playerService.selected.next(true);
     }
